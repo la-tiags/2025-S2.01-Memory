@@ -4,7 +4,7 @@
 :root {
   --color-main: #ffffff;
   --color-accent: #87CEEB;
-  --color-glow: rgba(135, 206, 235, 0.6);
+  --color-glow: rgb(255, 255, 255);
   --glass-bg: rgba(255, 255, 255, 0.2);
   --glass-border: rgba(255, 255, 255, 0.3);
 }
@@ -19,7 +19,7 @@ body {
   background: linear-gradient(135deg, #a2d2ff, #efeeff, #ffafcc);
   background-size: 400% 400%;
   animation: gradientBG 15s ease infinite;
-  overflow-x: hidden; /* Empêche le scroll horizontal !!!! */
+  overflow-x: hidden;
   padding: 20px;
 }
 
@@ -48,17 +48,18 @@ body::after {
 
 @keyframes floatingCards {
   0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-40px) rotate(20deg); }
+  50% { transform: translateY(-40px) rotate(40deg); }
 }
+
 
 /*Titre lumineux*/
 header h1 {
-  font-size: clamp(2rem, 8vw, 3.5rem); /* Taille adaptative */
+  font-size: clamp(2rem, 8vw, 3.5rem);
   font-weight: 300;
   color: white;
   letter-spacing: 5px;
   text-align: center;
-  text-shadow: 0 0 20px var(--color-glow);
+  text-shadow: 0 0 50px var(--color-glow);
   animation: floatGlow 4s ease-in-out infinite;
 }
 
@@ -81,9 +82,12 @@ header h1 {
   margin: 20px auto;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centre tout le contenu */
+  align-items: center;
 }
 
+.setup-form>h2{
+  color: #023e8a;
+}
 /*Formulaire*/
 .game-form {
   width: 100%;
