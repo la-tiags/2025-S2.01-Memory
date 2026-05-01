@@ -5,6 +5,10 @@ import {ApiService} from './ApiService.js';
 const domManager = new DOMManager();
 const game = new Game();
 
+// Gestionnaire pour le bouton d'abandon
+document.querySelector('#abandon-btn').addEventListener('click', () => {
+  game.abandonGame();
+});
 
 document.querySelector('.game-form').addEventListener('submit', async function (event) {
   event.preventDefault();
