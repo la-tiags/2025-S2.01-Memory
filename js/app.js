@@ -5,7 +5,7 @@ import {ApiService} from './ApiService.js';
 const domManager = new DOMManager();
 const game = new Game();
 
-// Gestionnaire pour le bouton d'abandon
+// Bouton d'abandon de partie
 document.querySelector('#abandon-btn').addEventListener('click', () => {
   game.abandonGame();
 });
