@@ -46,5 +46,27 @@ export const imageCollections = {
         {id: 7, name: "mario7", url: "./assets/images/mario/mario7.png"},
         {id: 8, name: "mario8", url: "./assets/images/mario/mario8.png"},
 
+    ],
+    ghibli: [
+        {id: 1, name: "ghibli1", url: "./assets/images/ghibli/ghibli1.png"},
+        {id: 2, name: "ghibli2", url: "./assets/images/ghibli/ghibli2.png"},
+        {id: 3, name: "ghibli3", url: "./assets/images/ghibli/ghibli3.png"},
+        {id: 4, name: "ghibli4", url: "./assets/images/ghibli/ghibli4.png"},
+        {id: 5, name: "ghibli5", url: "./assets/images/ghibli/ghibli5.png"},
+        {id: 6, name: "ghibli6", url: "./assets/images/ghibli/ghibli6.png"},
+        {id: 7, name: "ghibli7", url: "./assets/images/ghibli/ghibli7.png"},
+        {id: 8, name: "ghibli8", url: "./assets/images/ghibli/ghibli8.png"},
+
+    ],
+    disney: [
+        {id: 1, name: "disney1", url: "./assets/images/disney/disney1.png"},
+        {id: 2, name: "disney2", url: "./assets/images/disney/disney2.png"},
+        {id: 3, name: "disney3", url: "./assets/images/disney/disney3.png"},
+        {id: 4, name: "disney4", url: "./assets/images/disney/disney4.png"},
+        {id: 5, name: "disney5", url: "./assets/images/disney/disney5.png"},
+        {id: 6, name: "disney6", url: "./assets/images/disney/disney6.png"},
+        {id: 7, name: "disney7", url: "./assets/images/disney/disney7.png"},
+        {id: 8, name: "disney8", url: "./assets/images/disney/disney8.png"},
+
     ]
 };
