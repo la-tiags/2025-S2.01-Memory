@@ -36,4 +36,15 @@ export const imageCollections = {
         {id: 8, name: "car8", url: "./assets/images/cars/car8.png"},
 
     ],
+    mario: [
+        {id: 1, name: "mario1", url: "./assets/images/mario/mario1.png"},
+        {id: 2, name: "mario2", url: "./assets/images/mario/mario2.png"},
+        {id: 3, name: "mario3", url: "./assets/images/mario/mario3.png"},
+        {id: 4, name: "mario4", url: "./assets/images/mario/mario4.png"},
+        {id: 5, name: "mario5", url: "./assets/images/mario/mario5.png"},
+        {id: 6, name: "mario6", url: "./assets/images/mario/mario6.png"},
+        {id: 7, name: "mario7", url: "./assets/images/mario/mario7.png"},
+        {id: 8, name: "mario8", url: "./assets/images/mario/mario8.png"},
+
+    ]
 };
