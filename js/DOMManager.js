@@ -1,45 +1,174 @@
+/**
+ * Gère toutes les interactions avec le DOM pour le jeu de memory.
+ * Responsabilité unique : lecture et écriture dans le DOM, aucune logique métier.
+ */
 export class DOMManager {
+  // ─── Sélecteurs centralisés ───────────────────────────────────────────────
 
+  static SELECTORS = {
+    DIFFICULTY:      '#difficulty',
+    COLLECTION:      '#collection',
+    GAME_BOARD:      '.game-board',
+    TIMER:           '.timer',
+    SETUP_FORM:      '.setup-form',
+    GAME_CONTAINER:  '.game-container',
+    MODAL:           '#confirm-modal',
+    MODAL_MESSAGE:   '#confirm-modal .modal-message',
+    MODAL_CONFIRM:   '#confirm-modal .modal-confirm',
+    MODAL_CANCEL:    '#confirm-modal .modal-cancel',
+    ERROR_BANNER:    '#error-banner',
+  };
+
+  // ─── Lecture de formulaire ────────────────────────────────────────────────
 
   /**
-   * Ajoute toutes les images d'une collection sur le gameBoard
-   * @param {Card[]} cards - Tableau des cartes avec les images
-   * @param {Function} onCardClick - Callback appelé quand une carte est cliquée
+   * @returns {{ difficulty: number, collectionName: string }}
+   */
+  getFormValues() {
+    const difficulty     = parseInt(document.querySelector(DOMManager.SELECTORS.DIFFICULTY)?.value);
+    const collectionName = document.querySelector(DOMManager.SELECTORS.COLLECTION)?.value;
+
+    if (isNaN(difficulty) || !collectionName) {
+      throw new Error('Impossible de lire les valeurs du formulaire.');
+    }
+
+    return { difficulty, collectionName };
+  }
+
+  // ─── Affichage / masquage des vues ────────────────────────────────────────
+
+  showGame() {
+    document.querySelector(DOMManager.SELECTORS.SETUP_FORM).style.display  = 'none';
+    document.querySelector(DOMManager.SELECTORS.GAME_CONTAINER).style.display = 'block';
+  }
+
+  showSetup() {
+    document.querySelector(DOMManager.SELECTORS.SETUP_FORM).style.display  = 'block';
+    document.querySelector(DOMManager.SELECTORS.GAME_CONTAINER).style.display = 'none';
+  }
+
+  // ─── Timer ────────────────────────────────────────────────────────────────
+
+  /**
+   * Met à jour l'affichage du timer.
+   * @param {string} formattedTime - ex : "02:45"
+   */
+  updateTimer(formattedTime) {
+    const el = document.querySelector(DOMManager.SELECTORS.TIMER);
+    if (el) el.textContent = formattedTime;
+  }
+
+  // ─── Plateau de jeu ───────────────────────────────────────────────────────
+
+  /**
+   * Vide et reconstruit le plateau avec les cartes fournies.
+   * @param {Array<{ index: number, image: object }>} cards
+   * @param {Function} onCardClick - callback(cardIndex)
    */
   createCards(cards, onCardClick) {
-    const gameBoard = document.querySelector('.game-board');
-    gameBoard.innerHTML = '';
+    const board = document.querySelector(DOMManager.SELECTORS.GAME_BOARD);
+    board.innerHTML = '';
 
-    cards.forEach((card, index) => {
-      const cardElement = document.createElement('div');
-      cardElement.className = 'card';
-      cardElement.setAttribute('data-index', index);
-
-      const cardInner = document.createElement('div');
-      cardInner.className = 'card-inner';
-
-      const cardFront = document.createElement('div');
-      cardFront.className = 'card-front';
-      const maskImg = document.createElement('img');
-      maskImg.src = './assets/images/mask1.jpg';
-      maskImg.alt = 'Carte cachée';
-      cardFront.appendChild(maskImg);
-
-      const cardBack = document.createElement('div');
-      cardBack.className = 'card-back';
-      const backImg = document.createElement('img');
-      backImg.src = card.image.url;
-      backImg.alt = card.image.name;
-      cardBack.appendChild(backImg);
-
-      cardInner.appendChild(cardFront);
-      cardInner.appendChild(cardBack);
-      cardElement.appendChild(cardInner);
-
-      // Ajouter l'événement de clic
-      cardElement.addEventListener('click', () => onCardClick(index));
-
-      gameBoard.appendChild(cardElement);
+    cards.forEach(card => {
+      const el = document.createElement('div');
+      el.classList.add('card');
+      el.dataset.index = card.index;
+      el.innerHTML = `
+        <div class="card-inner">
+          <div class="card-front"></div>
+          <div class="card-back">
+            <img src="${card.image.url}" alt="${card.image.name}">
+          </div>
+        </div>`;
+      el.addEventListener('click', () => onCardClick(card.index));
+      board.appendChild(el);
     });
+  }
+
+  /**
+   * Retourne une carte (face visible).
+   * @param {number} cardIndex
+   */
+  flipCard(cardIndex) {
+    this.#getCardElement(cardIndex)?.classList.add('flipped');
+  }
+
+  /**
+   * Cache une carte (face cachée).
+   * @param {number} cardIndex
+   */
+  unflipCard(cardIndex) {
+    this.#getCardElement(cardIndex)?.classList.remove('flipped');
+  }
+
+  /**
+   * Marque une carte comme appairée.
+   * @param {number} cardIndex
+   */
+  markMatched(cardIndex) {
+    this.#getCardElement(cardIndex)?.classList.add('matched');
+  }
+
+  // ─── Modale de confirmation ───────────────────────────────────────────────
+
+  /**
+   * Affiche une modale de confirmation non-bloquante.
+   * @param {string} message
+   * @param {Function} onConfirm
+   * @param {Function} [onCancel]
+   */
+  showConfirmModal(message, onConfirm, onCancel) {
+    const modal   = document.querySelector(DOMManager.SELECTORS.MODAL);
+    const msgEl   = document.querySelector(DOMManager.SELECTORS.MODAL_MESSAGE);
+    const confirmBtn = document.querySelector(DOMManager.SELECTORS.MODAL_CONFIRM);
+    const cancelBtn  = document.querySelector(DOMManager.SELECTORS.MODAL_CANCEL);
+
+    if (!modal) {
+      // Fallback si la modale n'existe pas encore dans le HTML
+      if (window.confirm(message)) onConfirm();
+      else onCancel?.();
+      return;
+    }
+
+    msgEl.textContent = message;
+    modal.classList.add('visible');
+
+    const cleanup = () => modal.classList.remove('visible');
+
+    confirmBtn.onclick = () => { cleanup(); onConfirm(); };
+    cancelBtn.onclick  = () => { cleanup(); onCancel?.(); };
+  }
+
+  // ─── Bannière d'erreur ────────────────────────────────────────────────────
+
+  /**
+   * Affiche un message d'erreur non-bloquant dans le DOM.
+   * @param {string} message
+   * @param {number} [durationMs=4000]
+   */
+  showError(message, durationMs = 4000) {
+    let banner = document.querySelector(DOMManager.SELECTORS.ERROR_BANNER);
+
+    if (!banner) {
+      banner = document.createElement('div');
+      banner.id = 'error-banner';
+      banner.setAttribute('role', 'alert');
+      document.body.appendChild(banner);
+    }
+
+    banner.textContent = message;
+    banner.classList.add('visible');
+
+    setTimeout(() => banner.classList.remove('visible'), durationMs);
+  }
+
+  // ─── Utilitaire privé ─────────────────────────────────────────────────────
+
+  /**
+   * @param {number} cardIndex
+   * @returns {HTMLElement|null}
+   */
+  #getCardElement(cardIndex) {
+    return document.querySelector(`[data-index="${cardIndex}"]`);
   }
 }

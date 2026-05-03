@@ -1,148 +1,202 @@
-import {imageCollections} from './ImageCollection.js';
-import {ApiService} from './ApiService.js';
-import {DOMManager} from './DOMManager.js';
+import { imageCollections } from './ImageCollection.js';
+import { ApiService }        from './ApiService.js';
+import { DOMManager }        from './DOMManager.js';
+import { Timer }             from './Timer.js';
 
+/**
+ * Nombre de paires selon le niveau de difficulté.
+ * Extrait en constante de module pour éviter de recréer l'objet à chaque partie.
+ */
+const PAIR_COUNTS = Object.freeze({
+  1: 4,   // Facile        : 4 paires  (8  cartes)
+  2: 6,   // Intermédiaire : 6 paires  (12 cartes)
+  3: 8,   // Expert        : 8 paires  (16 cartes)
+});
 
 export class Game {
-  /**
-   * @type {number} id identifiant de la partie en cours
-   */
+  /** @type {number} Identifiant de la partie en cours */
   #id;
 
-  /**
-   * @type {DOMManager}
-   */
+  /** @type {DOMManager} */
   #domManager = new DOMManager();
 
-  /**
-   * @type {number} Nombre de paires restantes à trouver
-   */
+  /** @type {Timer} */
+  #timer = new Timer((seconds) => {
+    this.#domManager.updateTimer(Timer.format(seconds));
+  });
+
+  /** @type {number} Nombre de paires restantes à trouver */
   #remainingPairs = 0;
 
-  /**
-   * @type {Array} Les cartes du jeu
-   */
+  /** @type {Array<{ index: number, image: object, isFlipped: boolean, isMatched: boolean }>} */
   #cards = [];
 
-  /**
-   * @type {number[]} Indices des cartes actuellement visibles
-   */
+  /** @type {number[]} Indices des cartes actuellement retournées (max 2) */
   #flippedCards = [];
 
-  /**
-   * @type {number} Le nombre de secondes écoulées
-   */
-  #secondsElapsed = 0;
-
-  /**
-   * @type {number|null} ID du timer
-   */
-  #timerInterval = null;
-
-  /**
-   * @type {boolean} Pour éviter les clics pendant la vérification des paires
-   */
+  /** @type {boolean} Verrou pendant la vérification d'une paire */
   #isChecking = false;
 
-  /**
-   * @type {Image[]} Les images sélectionnées pour cette partie
-   */
-  #selectedImages = [];
-
-  async endGame() {
-    // Arrêter le timer
-    this.stopTimer();
-
-    try {
-      const result = await ApiService.updateGameResult(this.#id, this.#remainingPairs);
-      console.log('Fin de partie:', result);
-    } catch (error) {
-      console.error('Error:', error);
-      alert(error.message || 'Erreur lors de la fin de la partie');
-    } finally {
-      this.resetGameUI();
-    }
-  }
+  // ─── API publique ──────────────────────────────────────────────────────────
 
   /**
-   * Start a new game.
-   * @param {number} id - The game ID.
+   * Démarre une nouvelle partie.
+   * @param {number} id - Identifiant de partie fourni par le serveur
    */
   startGame(id) {
     this.#id = id;
 
-    // Récupérer les valeurs du formulaire
-    const difficulty = document.querySelector('#difficulty').value;
-    const collectionName = document.querySelector('#collection').value;
+    const { difficulty, collectionName } = this.#domManager.getFormValues();
 
-    // Obtenir la collection d'images
     const collection = imageCollections[collectionName];
+    if (!collection) {
+      this.#domManager.showError(`Collection inconnue : "${collectionName}"`);
+      return;
+    }
 
-    // Créer les paires d'images en fonction de la difficulté
-    this.#selectedImages = this.createPairedImages(collection, parseInt(difficulty));
-    this.#remainingPairs = this.#selectedImages.length / 2;
+    const pairedImages    = this.#createPairedImages(collection, difficulty);
+    this.#remainingPairs  = pairedImages.length / 2;
 
-    // Créer le plateau de jeu
-    this.createGameBoard();
-
-    // Masquer le formulaire et afficher le conteneur de jeu
-    document.querySelector('.setup-form').style.display = 'none';
-    document.querySelector('.game-container').style.display = 'block';
-
-    // Lancer le timer
-    this.startTimer();
+    this.#buildCards(pairedImages);
+    this.#domManager.showGame();
+    this.#timer.start();
   }
 
   /**
-   * Crée les cartes du jeu et les mélange
+   * Demande confirmation avant d'abandonner la partie.
    */
-  createGameBoard() {
-    const gameBoard = document.querySelector('.game-board');
-    gameBoard.innerHTML = '';
+  abandonGame() {
+    this.#domManager.showConfirmModal(
+      'Es-tu sûr de vouloir abandonner la partie ?',
+      () => this.#endGame(),
+    );
+  }
 
-    // Créer les cartes avec les images doublées
-    this.#cards = this.#selectedImages.map((image, index) => ({
-      index,
-      image,
-      isFlipped: false,
-      isMatched: false
-    }));
+  // ─── Logique de jeu ────────────────────────────────────────────────────────
 
-    // Mélanger les cartes
-    this.shuffleArray(this.#cards);
+  /**
+   * Gère le clic sur une carte.
+   * @param {number} cardIndex
+   */
+  #handleCardClick(cardIndex) {
+    if (this.#isChecking) return;
 
-    // Afficher les cartes via DOMManager
-    this.#domManager.createCards(this.#cards, (cardIndex) => this.handleCardClick(cardIndex));
+    const card = this.#cards[cardIndex];
+    if (!card || card.isMatched || card.isFlipped) return;
+
+    card.isFlipped = true;
+    this.#flippedCards.push(cardIndex);
+    this.#domManager.flipCard(cardIndex);
+
+    if (this.#flippedCards.length === 2) {
+      this.#isChecking = true;
+      setTimeout(() => this.#checkMatch(), 500);
+    }
+  }
+
+  /**
+   * Vérifie si les deux cartes retournées forment une paire.
+   */
+  #checkMatch() {
+    const [idx1, idx2] = this.#flippedCards;
+    const card1 = this.#cards[idx1];
+    const card2 = this.#cards[idx2];
+
+    if (card1.image.id === card2.image.id) {
+      card1.isMatched = true;
+      card2.isMatched = true;
+      this.#remainingPairs--;
+
+      this.#domManager.markMatched(idx1);
+      this.#domManager.markMatched(idx2);
+
+      if (this.#remainingPairs === 0) {
+        setTimeout(() => this.#endGame(), 500);
+      }
+    } else {
+      card1.isFlipped = false;
+      card2.isFlipped = false;
+      this.#domManager.unflipCard(idx1);
+      this.#domManager.unflipCard(idx2);
+    }
 
     this.#flippedCards = [];
+    this.#isChecking   = false;
   }
 
   /**
-   * Crée un tableau d'images appairées en fonction de la difficulté
-   * @param {Image[]} collection - La collection d'images
-   * @param {number} difficulty - Le niveau de difficulté (1=Facile, 2=Intermédiaire, 3=Expert)
-   * @returns {Image[]} Tableau d'images doublées
+   * Termine la partie (victoire ou abandon) et envoie le résultat au serveur.
    */
-  createPairedImages(collection, difficulty) {
-    // Calcul du nombre de paires selon la difficulté
-    const pairCounts = {
-      1: 4,   // Facile : 4 paires (8 cartes)
-      2: 6,   // Intermédiaire : 6 paires (12 cartes)
-      3: 8    // Expert : 8 paires (16 cartes)
-    };
+  async #endGame() {
+    this.#timer.stop();
 
-    const numPairs = pairCounts[difficulty] || 4;
+    try {
+      const result = await ApiService.updateGameResult(this.#id, this.#remainingPairs);
+      console.log('Fin de partie :', result);
+      this.#resetState();
+      this.#domManager.showSetup();
+    } catch (error) {
+      console.error('Erreur fin de partie :', error);
+      this.#domManager.showError(error.message || 'Erreur lors de la fin de la partie');
+      // On ne redirige pas vers le formulaire : le joueur peut réessayer
+    }
+  }
+
+  // ─── Construction du plateau ───────────────────────────────────────────────
+
+  /**
+   * Crée, mélange et affiche les cartes.
+   * @param {object[]} pairedImages
+   */
+  #buildCards(pairedImages) {
+    this.#cards = pairedImages.map((image, index) => ({
+      index,
+      image,
+      isFlipped:  false,
+      isMatched:  false,
+    }));
+
+    this.#shuffleArray(this.#cards);
+
+    // Réassigner les index APRÈS le mélange pour que data-index
+    // corresponde à la position réelle dans this.#cards
+    this.#cards.forEach((card, i) => { card.index = i; });
+
+    this.#flippedCards = [];
+
+    this.#domManager.createCards(
+      this.#cards,
+      (cardIndex) => this.#handleCardClick(cardIndex),
+    );
+  }
+
+  /**
+   * Sélectionne les images et les double pour créer les paires.
+   * @param {object[]} collection
+   * @param {number}   difficulty
+   * @returns {object[]}
+   * @throws {Error} si la difficulté est invalide
+   */
+  #createPairedImages(collection, difficulty) {
+    if (!(difficulty in PAIR_COUNTS)) {
+      throw new Error(`Difficulté invalide : ${difficulty}. Valeurs attendues : ${Object.keys(PAIR_COUNTS).join(', ')}`);
+    }
+
+    const numPairs      = PAIR_COUNTS[difficulty];
     const selectedImages = collection.slice(0, numPairs);
 
-    // Créer les paires (chaque image apparaît 2 fois)
+    if (selectedImages.length < numPairs) {
+      console.warn(`La collection ne contient que ${selectedImages.length} image(s) sur ${numPairs} demandées.`);
+    }
+
     return selectedImages.flatMap(image => [image, image]);
   }
 
   /**
-   * Mélange un tableau de manière aléatoire (Fisher-Yates shuffle)
-   * @param {Array} array - Le tableau à mélanger
+   * Mélange un tableau en place (Fisher-Yates).
+   * @param {Array} array
    */
-  shuffleArray(array) {
+  #shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
@@ -150,157 +204,12 @@ export class Game {
   }
 
   /**
-   * Gère le clic sur une carte
-   * @param {number} cardIndex - L'indice de la carte cliquée
+   * Réinitialise l'état interne du jeu (sans toucher au DOM).
    */
-  handleCardClick(cardIndex) {
-    // Éviter les clics pendant la vérification
-    if (this.#isChecking) return;
-
-    const card = this.#cards[cardIndex];
-
-    // Éviter de cliquer sur une carte déjà appairée ou déjà visible
-    if (card.isMatched || card.isFlipped || this.#flippedCards.includes(cardIndex)) return;
-
-    // Ajouter la carte à la liste des visibles
-    this.#flippedCards.push(cardIndex);
-    card.isFlipped = true;
-
-    // Retourner la carte visuellement
-    this.flipCard(cardIndex);
-
-    // Si deux cartes sont visibles, vérifier si elles correspondent
-    if (this.#flippedCards.length === 2) {
-      this.#isChecking = true;
-      setTimeout(() => this.checkMatch(), 500);
-    }
-  }
-
-  /**
-   * Retourne une carte visuellement
-   * @param {number} cardIndex - L'indice de la carte
-   */
-  flipCard(cardIndex) {
-    const cardElement = document.querySelector(`[data-index="${cardIndex}"]`);
-    if (cardElement) {
-      cardElement.classList.add('flipped');
-    }
-  }
-
-  /**
-   * Remet une carte face cachée
-   * @param {number} cardIndex - L'indice de la carte
-   */
-  unflipCard(cardIndex) {
-    const cardElement = document.querySelector(`[data-index="${cardIndex}"]`);
-    if (cardElement) {
-      cardElement.classList.remove('flipped');
-    }
-  }
-
-  /**
-   * Vérifie si les deux cartes visibles correspondent
-   */
-  checkMatch() {
-    const [index1, index2] = this.#flippedCards;
-    const card1 = this.#cards[index1];
-    const card2 = this.#cards[index2];
-
-    if (card1.image.id === card2.image.id) {
-      // Les cartes correspondent !
-      card1.isMatched = true;
-      card2.isMatched = true;
-      this.#remainingPairs--;
-
-      // Ajouter une classe CSS pour montrer que c'est une paire
-      document.querySelector(`[data-index="${index1}"]`).classList.add('matched');
-      document.querySelector(`[data-index="${index2}"]`).classList.add('matched');
-
-      console.log('Paire trouvée ! Paires restantes:', this.#remainingPairs);
-
-      // Vérifier si le jeu est gagné
-      if (this.isGameWon()) {
-        setTimeout(() => this.endGame(), 500);
-      }
-    } else {
-      // Les cartes ne correspondent pas, les recacher
-      card1.isFlipped = false;
-      card2.isFlipped = false;
-      this.unflipCard(index1);
-      this.unflipCard(index2);
-
-      console.log('Cartes qui ne correspondent pas. Paires restantes:', this.#remainingPairs);
-    }
-
-    // Réinitialiser
-    this.#flippedCards = [];
-    this.#isChecking = false;
-  }
-
-  /**
-   * Vérifie si toutes les paires ont été trouvées
-   * @returns {boolean}
-   */
-  isGameWon() {
-    return this.#remainingPairs === 0;
-  }
-
-  /**
-   * Lance le timer
-   */
-  startTimer() {
-    this.#secondsElapsed = 0;
-    this.updateTimerDisplay();
-
-    this.#timerInterval = setInterval(() => {
-      this.#secondsElapsed++;
-      this.updateTimerDisplay();
-    }, 1000);
-  }
-
-  /**
-   * Met à jour l'affichage du timer
-   */
-  updateTimerDisplay() {
-    const minutes = Math.floor(this.#secondsElapsed / 60);
-    const seconds = this.#secondsElapsed % 60;
-    const timerDisplay = document.querySelector('.timer');
-    if (timerDisplay) {
-      timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    }
-  }
-
-  /**
-   * Arrête le timer
-   */
-  stopTimer() {
-    if (this.#timerInterval !== null) {
-      clearInterval(this.#timerInterval);
-      this.#timerInterval = null;
-    }
-  }
-
-  /**
-   * Réinitialise l'interface du jeu
-   */
-  resetGameUI() {
-    // Afficher le formulaire et masquer le conteneur de jeu
-    document.querySelector('.setup-form').style.display = 'block';
-    document.querySelector('.game-container').style.display = 'none';
-
-    // Réinitialiser les propriétés
-    this.#cards = [];
-    this.#flippedCards = [];
+  #resetState() {
+    this.#cards          = [];
+    this.#flippedCards   = [];
     this.#remainingPairs = 0;
-    this.#secondsElapsed = 0;
-  }
-
-  /**
-   * Abandonne la partie en cours
-   */
-  abandonGame() {
-    if (confirm('Es-tu sûr de vouloir abandonner la partie ?')) {
-      this.endGame();
-    }
+    this.#timer.reset();
   }
 }

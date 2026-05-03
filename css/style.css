@@ -327,7 +327,9 @@ header h1 {
 }
 
 .card-front {
-  background: linear-gradient(135deg, #a2d2ff, #c7ceea);
+  background-image: url('../assets/images/mask1.jpg');
+  background-size: cover;
+  background-position: center;
 }
 
 .card-back {
