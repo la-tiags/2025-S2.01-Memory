@@ -68,6 +68,7 @@ export class Game {
     this.#buildCards(pairedImages);
     this.#domManager.showGame();
     this.#timer.start();
+    this.#domManager.updateMoves(this.#moves);
   }
 
   /**
