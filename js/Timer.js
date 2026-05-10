@@ -22,7 +22,9 @@ export class Timer {
     this.#onExpire  = onExpire;
     this.#maxSeconds = maxSeconds;
   }
-
+  /**
+   * Démarre le timer (réinitialise le compteur).
+   */
   start() {
     this.reset();
     this.#onTick(this.#maxSeconds);
@@ -36,19 +38,7 @@ export class Timer {
       }
     }, 1000);
   }
-
-  /**
-   * Démarre le timer (réinitialise le compteur).
-   */
-  start() {
-    this.reset();
-    this.#onTick(this.#secondsElapsed); // affichage immédiat à 00:00
-
-    this.#intervalId = setInterval(() => {
-      this.#secondsElapsed++;
-      this.#onTick(this.#secondsElapsed);
-    }, 1000);
-  }
+  
 
   /**
    * Arrête le timer sans réinitialiser le compteur.
