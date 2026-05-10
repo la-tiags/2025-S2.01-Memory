@@ -3,6 +3,12 @@ import { ApiService }        from './ApiService.js';
 import { DOMManager }        from './DOMManager.js';
 import { Timer }             from './Timer.js';
 
+const flipSound = new Audio('assets/sounds/flip.mp3');
+const wrongSound = new Audio('assets/sounds/flip_back.mp3');
+const matchSound = new Audio('assets/sounds/match.mp3');
+const winSound = new Audio('assets/sounds/win.mp3');
+const loseSound = new Audio('assets/sounds/lose.mp3');
+
 /**
  * Nombre de paires selon le niveau de difficulté.
  * Extrait en constante de module pour éviter de recréer l'objet à chaque partie.
@@ -89,6 +95,9 @@ export class Game {
     card.isFlipped = true;
     this.#flippedCards.push(cardIndex);
     this.#domManager.flipCard(cardIndex);
+    flipSound.play().catch(() => {
+      // Le navigateur peut bloquer le son si aucune interaction valide n'a encore eu lieu.
+    });
 
     if (this.#flippedCards.length === 2) {
       this.#moves++;
@@ -113,6 +122,9 @@ export class Game {
 
       this.#domManager.markMatched(idx1);
       this.#domManager.markMatched(idx2);
+      matchSound.play().catch(() => {
+        // Le navigateur peut bloquer le son si aucune interaction valide n'a encore eu lieu.
+      });
 
       if (this.#remainingPairs === 0) {
         setTimeout(() => this.#endGame(), 500);
@@ -122,6 +134,9 @@ export class Game {
       card2.isFlipped = false;
       this.#domManager.unflipCard(idx1);
       this.#domManager.unflipCard(idx2);
+      wrongSound.play().catch(() => {
+        // Le navigateur peut bloquer le son si aucune interaction valide n'a encore eu lieu.
+      });
     }
 
     this.#flippedCards = [];
@@ -136,6 +151,13 @@ export class Game {
     const moves   = this.#moves;
     const won     = this.#remainingPairs === 0;
     this.#timer.stop();
+
+      if (won) {
+        winSound.play();
+      } 
+      else {
+        loseSound.play();
+      }
 
     try {
       await ApiService.updateGameResult(this.#id, this.#remainingPairs);
