@@ -115,6 +115,7 @@ header h1 {
   padding: 12px;
   color: #023e8a;
   width: 100%;
+  box-sizing: border-box;
   outline: none;
   font-family: inherit;
 }
@@ -279,10 +280,10 @@ header h1 {
 
 .game-board {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 15px;
   width: 100%;
-  max-width: 600px;
+  max-width: 700px;
   padding: 20px;
   background: var(--glass-bg);
   backdrop-filter: blur(15px);
@@ -293,7 +294,7 @@ header h1 {
 }
 
 .card {
-  aspect-ratio: 1;
+  aspect-ratio: 4/3;
   cursor: pointer;
   perspective: 1000px;
   height: 120px;
@@ -340,7 +341,7 @@ header h1 {
 .card img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit:contain;
 }
 
 .card.matched {
