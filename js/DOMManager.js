@@ -2,6 +2,7 @@
  * Gère toutes les interactions avec le DOM pour le jeu de memory.
  * Responsabilité unique : lecture et écriture dans le DOM, aucune logique métier.
  */
+import { Timer } from './Timer.js';
 export class DOMManager {
   // ─── Sélecteurs centralisés ───────────────────────────────────────────────
 
@@ -177,38 +178,41 @@ export class DOMManager {
   #getCardElement(cardIndex) {
     return document.querySelector(`[data-index="${cardIndex}"]`);
   }
-  updateMoves(count) {
-    const el = document.querySelector(DOMManager.SELECTORS.MOVES);
-    if (el) el.textContent = `${count} coup${count > 1 ? 's' : ''}`;
-  }
-//feature: endgame screen
-  showEndScreen(won, moves, seconds, onReplay) {
-    const screen  = document.querySelector(DOMManager.SELECTORS.END_SCREEN);
-    const emoji   = document.querySelector(DOMManager.SELECTORS.END_EMOJI);
-    const title   = document.querySelector(DOMManager.SELECTORS.END_TITLE);
-    const message = document.querySelector(DOMManager.SELECTORS.END_MESSAGE);
-    const btn     = document.querySelector(DOMManager.SELECTORS.REPLAY_BTN);
-
-    if (won) {
-      emoji.textContent   = '🎉';
-      title.textContent   = 'Bravo !';
-      message.textContent = `Tu as trouvé toutes les paires en ${moves} coup${moves > 1 ? 's' : ''} et ${Timer.format(seconds)} !`;
-      this.#launchConfetti();
-      ////feature: endgame screen (lose:flash)
-    } else {
-      emoji.textContent   = '😔';
-      title.textContent   = 'Partie terminée';
-      message.textContent = `Tu avais encore ${moves} paire${moves > 1 ? 's' : ''} à trouver. Retente ta chance !`;
-      document.body.classList.add('lose-flash');
-      setTimeout(() => document.body.classList.remove('lose-flash'), 1500);
+    updateMoves(count)
+    {
+      const el = document.querySelector(DOMManager.SELECTORS.MOVES);
+      if (el) el.textContent = `${count} coup${count > 1 ? 's' : ''}`;
     }
+//feature: endgame screen
+    showEndScreen(won, moves, seconds, onReplay)
+    {
+      const screen = document.querySelector(DOMManager.SELECTORS.END_SCREEN);
+      const emoji = document.querySelector(DOMManager.SELECTORS.END_EMOJI);
+      const title = document.querySelector(DOMManager.SELECTORS.END_TITLE);
+      const message = document.querySelector(DOMManager.SELECTORS.END_MESSAGE);
+      const btn = document.querySelector(DOMManager.SELECTORS.REPLAY_BTN);
 
-    screen.classList.add('visible');
-    btn.onclick = () => {
-      screen.classList.remove('visible');
-      onReplay();
-    };
-  }
+      if (won) {
+        emoji.textContent = '🎉';
+        title.textContent = 'Bravo !';
+        message.textContent = `Tu as trouvé toutes les paires en ${moves} coup${moves > 1 ? 's' : ''} et ${Timer.format(seconds)} !`;
+        this.#launchConfetti();
+        ////feature: endgame screen (lose:flash)
+      } else {
+        emoji.textContent = '😔';
+        title.textContent = 'Partie terminée';
+        message.textContent = `Tu avais encore ${moves} paire${moves > 1 ? 's' : ''} à trouver. Retente ta chance !`;
+        document.body.classList.add('lose-flash');
+        setTimeout(() => document.body.classList.remove('lose-flash'), 1500);
+      }
+
+      screen.classList.add('visible');
+      btn.onclick = () => {
+        screen.classList.remove('visible');
+        onReplay();
+      };
+    }
+  
 //feature: endgame screen (win:conffetis)
   #launchConfetti() {
     const colors = ['#a2d2ff', '#ffafcc', '#bde0fe', '#ffc2d1', '#cdb4db'];
