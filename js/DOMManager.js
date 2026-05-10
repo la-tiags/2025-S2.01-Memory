@@ -45,7 +45,7 @@ export class DOMManager {
 
   showGame() {
     document.querySelector(DOMManager.SELECTORS.SETUP_FORM).style.display  = 'none';
-    document.querySelector(DOMManager.SELECTORS.GAME_CONTAINER).style.display = 'block';
+    document.querySelector(DOMManager.SELECTORS.GAME_CONTAINER).style.display = 'flex';
   }
 
   showSetup() {
