@@ -23,7 +23,7 @@ export class Game {
   /** @type {Timer} */
   #timer = new Timer((seconds) => {
     this.#domManager.updateTimer(Timer.format(seconds));
-  });
+  }, () => this.#endGame());
 
   /** @type {number} Nombre de paires restantes à trouver */
   #remainingPairs = 0;

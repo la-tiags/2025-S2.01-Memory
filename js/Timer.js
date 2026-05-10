@@ -15,11 +15,24 @@ export class Timer {
   /**
    * @param {Function} onTick - Callback appelé chaque seconde avec (secondsElapsed)
    */
-  constructor(onTick) {
-    if (typeof onTick !== 'function') {
-      throw new Error('Timer requires an onTick callback function');
-    }
-    this.#onTick = onTick;
+  constructor(onTick, onExpire = null, maxSeconds = 180) {
+    this.#onTick    = onTick;
+    this.#onExpire  = onExpire;
+    this.#maxSeconds = maxSeconds;
+  }
+
+  start() {
+    this.reset();
+    this.#onTick(this.#maxSeconds);
+    this.#intervalId = setInterval(() => {
+      this.#secondsElapsed++;
+      const remaining = this.#maxSeconds - this.#secondsElapsed;
+      this.#onTick(remaining);
+      if (remaining <= 0) {
+        this.stop();
+        this.#onExpire?.();
+      }
+    }, 1000);
   }
 
   /**
