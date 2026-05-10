@@ -91,6 +91,8 @@ export class Game {
     this.#domManager.flipCard(cardIndex);
 
     if (this.#flippedCards.length === 2) {
+      this.#moves++;
+      this.#domManager.updateMoves(this.#moves);
       this.#isChecking = true;
       setTimeout(() => this.#checkMatch(), 500);
     }
