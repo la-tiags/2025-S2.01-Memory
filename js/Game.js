@@ -36,6 +36,8 @@ export class Game {
 
   /** @type {boolean} Verrou pendant la vérification d'une paire */
   #isChecking = false;
+  /** @type {number} Nombre de coups joués */
+  #moves = 0;
 
   // ─── API publique ──────────────────────────────────────────────────────────
 
