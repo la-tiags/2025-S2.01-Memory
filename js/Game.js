@@ -218,6 +218,7 @@ export class Game {
   #resetState() {
     this.#cards          = [];
     this.#flippedCards   = [];
+    this.#moves = 0;
     this.#remainingPairs = 0;
     this.#timer.reset();
   }
