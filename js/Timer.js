@@ -11,6 +11,8 @@ export class Timer {
 
   /** @type {Function|null} Appelé à chaque tick avec le nombre de secondes */
   #onTick = null;
+  #onExpire = null;
+  #maxSeconds = 180;
 
   /**
    * @param {Function} onTick - Callback appelé chaque seconde avec (secondsElapsed)
