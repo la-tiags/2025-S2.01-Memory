@@ -25,7 +25,7 @@ body {
 
 /* Cartes Fantômes*/
 body::before {
-  content: "🃏";
+  content: "\1F0CF";
   position: fixed;
   font-size: 10rem;
   opacity: 0.1;
@@ -36,7 +36,7 @@ body::before {
 }
 
 body::after {
-  content: "✨";
+  content: "\2728";
   position: fixed;
   font-size: 8rem;
   opacity: 0.1;
