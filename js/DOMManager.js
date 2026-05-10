@@ -17,6 +17,12 @@ export class DOMManager {
     MODAL_CONFIRM:   '#confirm-modal .modal-confirm',
     MODAL_CANCEL:    '#confirm-modal .modal-cancel',
     ERROR_BANNER:    '#error-banner',
+    MOVES:           '.moves-counter',
+    END_SCREEN:      '#end-screen',
+    END_EMOJI:       '#end-emoji',
+    END_TITLE:       '#end-title',
+    END_MESSAGE:     '#end-message',
+    REPLAY_BTN:      '#replay-btn',
   };
 
   // ─── Lecture de formulaire ────────────────────────────────────────────────
