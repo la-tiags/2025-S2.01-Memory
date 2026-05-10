@@ -132,19 +132,24 @@ export class Game {
    * Termine la partie (victoire ou abandon) et envoie le résultat au serveur.
    */
   async #endGame() {
+    const seconds = this.#timer.seconds;
+    const moves   = this.#moves;
+    const won     = this.#remainingPairs === 0;
     this.#timer.stop();
 
     try {
-      const result = await ApiService.updateGameResult(this.#id, this.#remainingPairs);
-      console.log('Fin de partie :', result);
-      this.#resetState();
-      this.#domManager.showSetup();
+      await ApiService.updateGameResult(this.#id, this.#remainingPairs);
     } catch (error) {
       console.error('Erreur fin de partie :', error);
-      this.#domManager.showError(error.message || 'Erreur lors de la fin de la partie');
-      // On ne redirige pas vers le formulaire : le joueur peut réessayer
     }
+
+    this.#domManager.showEndScreen(won, moves, seconds, () => {
+      this.#resetState();
+      this.#domManager.showSetup();
+    });
   }
+
+
 
   // ─── Construction du plateau ───────────────────────────────────────────────
 
