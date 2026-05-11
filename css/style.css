@@ -383,6 +383,35 @@ header h1 {
   text-align: center;
 }
 
+.combo-burst {
+  position: fixed;
+  z-index: 150;
+  pointer-events: none;
+  color: white;
+  font-size: clamp(3rem, 6vw, 5rem);
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.9), 0 0 45px rgba(255, 175, 204, 0.8);
+  transform: translate(-50%, -50%) scale(0.8);
+  opacity: 0;
+  animation: combo-pop 1s ease forwards;
+}
+
+@keyframes combo-pop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  25% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.6);
+  }
+}
+
 #confirm-modal {
   display: none;
   position: fixed;
