@@ -3,7 +3,6 @@ import { ApiService }        from './ApiService.js';
 import { DOMManager }        from './DOMManager.js';
 import { Timer }             from './Timer.js';
 
-const flipSound = new Audio('assets/sounds/flip.mp3');
 const wrongSound = new Audio('assets/sounds/flip_back.mp3');
 const matchSound = new Audio('assets/sounds/match.mp3');
 const comboSounds = [
@@ -108,7 +107,8 @@ export class Game {
     card.isFlipped = true;
     this.#flippedCards.push(cardIndex);
     this.#domManager.flipCard(cardIndex);
-    flipSound.play().catch(() => {});
+    const flipSoundInstance = new Audio('assets/sounds/flip.mp3');
+    flipSoundInstance.play().catch(() => {});
 
     if (this.#flippedCards.length === 2) {
       this.#moves++;
