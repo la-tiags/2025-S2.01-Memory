@@ -64,16 +64,25 @@ Le plus challengeant pour tout le monde a été **`DOMManager.js`** et **`Game.j
 - Confettis animés en cas de victoire, avec effet sonnore
 - Flash rouge en cas de défaite ou d'abandon, avec effet sonnore
 - Sons au retournement de carte et à la découverte d'une paire
-- Collections d'images supplémentaires (en cours)
+- Collections d'images supplémentaires
+- Système de combos (enchaînement de paires : multiplicateur x2, x3… avec son progressif)
 
 ---
 
 ## Collections d'images disponibles
 
 - Animaux
+- Fruits
+- Voitures
 - Mario Party
 - Studio Ghibli
 - Walt Disney
+- BDE 24-25
+- Pokémon
+- Youtubeurs Français
+- Albums Intergenerationel
+- Albums en vogue actuellement 
+
 
 ---
 
@@ -90,4 +99,5 @@ Le plus challengeant pour tout le monde a été **`DOMManager.js`** et **`Game.j
 | Écran de fin | Terminé |
 | Animations victoire / défaite | Terminé |
 | Sons | Terminé |
-| Collections d'images supplémentaires | En cours |
+| Collections d'images supplémentaires | Terminé |
+| Système de combos | Terminé |
