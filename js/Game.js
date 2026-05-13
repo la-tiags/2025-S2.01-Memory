@@ -3,9 +3,17 @@ import { ApiService }        from './ApiService.js';
 import { DOMManager }        from './DOMManager.js';
 import { Timer }             from './Timer.js';
 
-const flipSound = new Audio('assets/sounds/flip.mp3');
 const wrongSound = new Audio('assets/sounds/flip_back.mp3');
 const matchSound = new Audio('assets/sounds/match.mp3');
+const comboSounds = [
+  new Audio('assets/sounds/combo.mp3'),
+  new Audio('assets/sounds/combo2.mp3'),
+  new Audio('assets/sounds/combo3.mp3'),
+  new Audio('assets/sounds/combo4.mp3'),
+  new Audio('assets/sounds/combo5.mp3'),
+  new Audio('assets/sounds/combo6.mp3'),
+  new Audio('assets/sounds/combo7.mp3'),
+];
 const winSound = new Audio('assets/sounds/win.mp3');
 const loseSound = new Audio('assets/sounds/lose.mp3');
 
@@ -44,6 +52,8 @@ export class Game {
   #isChecking = false;
   /** @type {number} Nombre de coups joués */
   #moves = 0;
+  /** @type {number} Combo actuel */
+  #combo = 0;
 
   // ─── API publique ──────────────────────────────────────────────────────────
 
@@ -67,7 +77,9 @@ export class Game {
 
     this.#buildCards(pairedImages);
     this.#domManager.showGame();
+    this.#combo = 0;
     this.#timer.start();
+    this.#domManager.updateMoves(this.#moves);
   }
 
   /**
@@ -95,9 +107,8 @@ export class Game {
     card.isFlipped = true;
     this.#flippedCards.push(cardIndex);
     this.#domManager.flipCard(cardIndex);
-    flipSound.play().catch(() => {
-      // Le navigateur peut bloquer le son si aucune interaction valide n'a encore eu lieu.
-    });
+    const flipSoundInstance = new Audio('assets/sounds/flip.mp3');
+    flipSoundInstance.play().catch(() => {});
 
     if (this.#flippedCards.length === 2) {
       this.#moves++;
@@ -119,24 +130,28 @@ export class Game {
       card1.isMatched = true;
       card2.isMatched = true;
       this.#remainingPairs--;
+      this.#combo++;
 
       this.#domManager.markMatched(idx1);
       this.#domManager.markMatched(idx2);
-      matchSound.play().catch(() => {
-        // Le navigateur peut bloquer le son si aucune interaction valide n'a encore eu lieu.
-      });
 
-      if (this.#remainingPairs === 0) {
-        setTimeout(() => this.#endGame(), 500);
+      if (this.#combo >= 2) {
+        this.#playComboSound(this.#combo);
+        this.#domManager.showComboBurst(this.#combo);
+      } else {
+        matchSound.play().catch(() => {});
       }
     } else {
       card1.isFlipped = false;
       card2.isFlipped = false;
+      this.#combo = 0;
       this.#domManager.unflipCard(idx1);
       this.#domManager.unflipCard(idx2);
-      wrongSound.play().catch(() => {
-        // Le navigateur peut bloquer le son si aucune interaction valide n'a encore eu lieu.
-      });
+      wrongSound.play().catch(() => {});
+    }
+
+    if (this.#remainingPairs === 0) {
+      setTimeout(() => this.#endGame(), 500);
     }
 
     this.#flippedCards = [];
@@ -235,12 +250,24 @@ export class Game {
   }
 
   /**
+   * Joue le bon son combo pour le combo actuel.
+   * @param {number} combo
+   */
+  #playComboSound(combo) {
+    const index = Math.min(combo - 2, comboSounds.length - 1);
+    const sound = comboSounds[index];
+    sound.currentTime = 0;
+    sound.play().catch(() => {});
+  }
+
+  /**
    * Réinitialise l'état interne du jeu (sans toucher au DOM).
    */
   #resetState() {
     this.#cards          = [];
     this.#flippedCards   = [];
     this.#moves = 0;
+    this.#combo = 0;
     this.#remainingPairs = 0;
     this.#timer.reset();
   }

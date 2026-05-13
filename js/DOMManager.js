@@ -169,6 +169,26 @@ export class DOMManager {
     setTimeout(() => banner.classList.remove('visible'), durationMs);
   }
 
+  /**
+   * Affiche un message combo en grand sur l'écran à une position aléatoire.
+   * @param {number} comboCount
+   */
+  showComboBurst(comboCount) {
+    const burst = document.createElement('div');
+    burst.className = 'combo-burst';
+    burst.textContent = `x${comboCount}`;
+
+    const edgeRatio = 0.12;
+    const left = Math.random() * (1 - edgeRatio * 2) + edgeRatio;
+    const top = Math.random() * (1 - edgeRatio * 2) + edgeRatio;
+
+    burst.style.left = `${left * 100}%`;
+    burst.style.top = `${top * 100}%`;
+
+    document.body.appendChild(burst);
+    burst.addEventListener('animationend', () => burst.remove(), { once: true });
+  }
+
   // ─── Utilitaire privé ─────────────────────────────────────────────────────
 
   /**
