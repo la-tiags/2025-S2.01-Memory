@@ -15,7 +15,6 @@ document.querySelector('.game-form').addEventListener('submit', async function (
   // Récupération des valeurs du formulaire
   const pseudo = document.querySelector('#pseudo').value;
   const difficulty = document.querySelector('#difficulty').value;
-  const collection = document.querySelector('#collection').value;
 
   try {
     // On passe ici le pseudo et la difficulté récupérés dans le formulaire
