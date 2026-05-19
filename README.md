@@ -66,6 +66,7 @@ Le plus challengeant pour tout le monde a été **`DOMManager.js`** et **`Game.j
 - Sons au retournement de carte et à la découverte d'une paire
 - Collections d'images supplémentaires
 - Système de combos (enchaînement de paires : multiplicateur x2, x3… avec son progressif)
+- Mode "Memory Inversé" : associer des paires liées par une logique (clé/serrure, soleil/lune…) plutôt que des images identiques
 
 ---
 
@@ -82,22 +83,26 @@ Le plus challengeant pour tout le monde a été **`DOMManager.js`** et **`Game.j
 - Youtubeurs Français
 - Albums Intergenerationel
 - Albums en vogue actuellement 
+- Marques connues
+- Genshin Impact
+- Personnes marquantes
 
 
 ---
 
 ## Suivi d'avancement
 
-| Tâche | Statut |
-|---|---|
-| Formulaire d'accueil | Terminé |
-| Affichage des cartes | Terminé |
-| Logique de jeu | Terminé |
-| Chronomètre | Terminé |
-| Liaison serveur | Terminé |
-| Compteur de coups | Terminé |
-| Écran de fin | Terminé |
-| Animations victoire / défaite | Terminé |
-| Sons | Terminé |
-| Collections d'images supplémentaires | Terminé |
-| Système de combos | Terminé |
+| Tâche | Statut   |
+|---|----------|
+| Formulaire d'accueil | Terminé  |
+| Affichage des cartes | Terminé  |
+| Logique de jeu | Terminé  |
+| Chronomètre | Terminé  |
+| Liaison serveur | Terminé  |
+| Compteur de coups | Terminé  |
+| Écran de fin | Terminé  |
+| Animations victoire / défaite | Terminé  |
+| Sons | Terminé  |
+| Collections d'images supplémentaires | En cours |
+| Système de combos | Terminé  |
+| Mode Memory Inversé | En cours |
