@@ -14,4 +14,12 @@
  * @property {Collection} animals
  * @property {Collection} fruits
  * @property {Collection} cars
+ * @property {Collection} mario
+ * @property {Collection} ghibli
+ * @property {Collection} disney
+ * @property {Collection} bde
+ * @property {Collection} pokemon
+ * @property {Collection} youtube
+ * @property {Collection} icon
+ * @property {Collection} top
  */
