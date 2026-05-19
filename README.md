@@ -226,6 +226,27 @@ Le plus challengeant pour tout le monde a été **`DOMManager.js`** et **`Game.j
     <img src="assets/images/knowns/known7.png" width="12%">
     <img src="assets/images/knowns/known8.png" width="12%">
   </p>
+- Mode Memory Inversé
+  <p align="center">
+    <img src="assets/images/inverse/compare1.png" width="12%">
+    <img src="assets/images/inverse/compare2.png" width="12%">
+    <img src="assets/images/inverse/compare3.png" width="12%">
+    <img src="assets/images/inverse/compare4.png" width="12%">
+    <img src="assets/images/inverse/compare5.png" width="12%">
+    <img src="assets/images/inverse/compare6.png" width="12%">
+    <img src="assets/images/inverse/compare7.png" width="12%">
+    <img src="assets/images/inverse/compare8.png" width="12%">
+  </p>
+  <p align="center">
+    <img src="assets/images/inverse/comparant1.png" width="12%">
+    <img src="assets/images/inverse/comparant2.png" width="12%">
+    <img src="assets/images/inverse/comparant3.png" width="12%">
+    <img src="assets/images/inverse/comparant4.png" width="12%">
+    <img src="assets/images/inverse/comparant5.png" width="12%">
+    <img src="assets/images/inverse/comparant6.png" width="12%">
+    <img src="assets/images/inverse/comparant7.png" width="12%">
+    <img src="assets/images/inverse/comparant8.png" width="12%">
+  </p>
 
 ---
 
