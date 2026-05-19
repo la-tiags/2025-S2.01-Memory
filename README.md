@@ -107,14 +107,14 @@ Le plus challengeant pour tout le monde a été **`DOMManager.js`** et **`Game.j
   </p>
 - Mario Party
   <p align="center">
-    <img src="assets/images/animals/animal1.png" width="12%">
-    <img src="assets/images/animals/animal2.png" width="12%">
-    <img src="assets/images/animals/animal3.png" width="12%">
-    <img src="assets/images/animals/animal4.png" width="12%">
-    <img src="assets/images/animals/animal5.png" width="12%">
-    <img src="assets/images/animals/animal6.png" width="12%">
-    <img src="assets/images/animals/animal7.png" width="12%">
-    <img src="assets/images/animals/animal8.png" width="12%">
+    <img src="assets/images/mario/mario1.png" width="12%">
+    <img src="assets/images/mario/mario2.png" width="12%">
+    <img src="assets/images/mario/mario3.png" width="12%">
+    <img src="assets/images/mario/mario4.png" width="12%">
+    <img src="assets/images/mario/mario5.png" width="12%">
+    <img src="assets/images/mario/mario6.png" width="12%">
+    <img src="assets/images/mario/mario7.png" width="12%">
+    <img src="assets/images/mario/mario8.png" width="12%">
   </p>
 - Studio Ghibli
   <p align="center">
