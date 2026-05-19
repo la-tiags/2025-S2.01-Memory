@@ -22,4 +22,7 @@
  * @property {Collection} youtube
  * @property {Collection} icon
  * @property {Collection} top
+ * @property {Collection} brands
+ * @property {Collection} genshin
+ * @property {Collection} knowns
  */
