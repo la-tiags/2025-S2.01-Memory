@@ -73,20 +73,159 @@ Le plus challengeant pour tout le monde a été **`DOMManager.js`** et **`Game.j
 ## Collections d'images disponibles
 
 - Animaux
+  <p align="center">
+    <img src="assets/images/animals/animal1.png" width="12%">
+    <img src="assets/images/animals/animal2.png" width="12%">
+    <img src="assets/images/animals/animal3.png" width="12%">
+    <img src="assets/images/animals/animal4.png" width="12%">
+    <img src="assets/images/animals/animal5.png" width="12%">
+    <img src="assets/images/animals/animal6.png" width="12%">
+    <img src="assets/images/animals/animal7.png" width="12%">
+    <img src="assets/images/animals/animal8.png" width="12%">
+  </p>
 - Fruits
+  <p align="center">
+    <img src="assets/images/fruits/fruit1.png" width="12%">
+    <img src="assets/images/fruits/fruit2.png" width="12%">
+    <img src="assets/images/fruits/fruit3.png" width="12%">
+    <img src="assets/images/fruits/fruit4.png" width="12%">
+    <img src="assets/images/fruits/fruit5.png" width="12%">
+    <img src="assets/images/fruits/fruit6.png" width="12%">
+    <img src="assets/images/fruits/fruit7.png" width="12%">
+    <img src="assets/images/fruits/fruit8.png" width="12%">
+  </p>
 - Voitures
+  <p align="center">
+    <img src="assets/images/cars/car1.png" width="12%">
+    <img src="assets/images/cars/car2.png" width="12%">
+    <img src="assets/images/cars/car3.png" width="12%">
+    <img src="assets/images/cars/car4.png" width="12%">
+    <img src="assets/images/cars/car5.png" width="12%">
+    <img src="assets/images/cars/car6.png" width="12%">
+    <img src="assets/images/cars/car7.png" width="12%">
+    <img src="assets/images/cars/car8.png" width="12%">
+  </p>
 - Mario Party
+  <p align="center">
+    <img src="assets/images/animals/animal1.png" width="12%">
+    <img src="assets/images/animals/animal2.png" width="12%">
+    <img src="assets/images/animals/animal3.png" width="12%">
+    <img src="assets/images/animals/animal4.png" width="12%">
+    <img src="assets/images/animals/animal5.png" width="12%">
+    <img src="assets/images/animals/animal6.png" width="12%">
+    <img src="assets/images/animals/animal7.png" width="12%">
+    <img src="assets/images/animals/animal8.png" width="12%">
+  </p>
 - Studio Ghibli
+  <p align="center">
+    <img src="assets/images/ghibli/ghibli1.png" width="12%">
+    <img src="assets/images/ghibli/ghibli2.png" width="12%">
+    <img src="assets/images/ghibli/ghibli3.png" width="12%">
+    <img src="assets/images/ghibli/ghibli4.png" width="12%">
+    <img src="assets/images/ghibli/ghibli5.png" width="12%">
+    <img src="assets/images/ghibli/ghibli6.png" width="12%">
+    <img src="assets/images/ghibli/ghibli7.png" width="12%">
+    <img src="assets/images/ghibli/ghibli8.png" width="12%">
+  </p>
 - Walt Disney
+  <p align="center">
+    <img src="assets/images/disney/disney1.png" width="12%">
+    <img src="assets/images/disney/disney2.png" width="12%">
+    <img src="assets/images/disney/disney3.png" width="12%">
+    <img src="assets/images/disney/disney4.png" width="12%">
+    <img src="assets/images/disney/disney5.png" width="12%">
+    <img src="assets/images/disney/disney6.png" width="12%">
+    <img src="assets/images/disney/disney7.png" width="12%">
+    <img src="assets/images/disney/disney8.png" width="12%">
+  </p>
 - BDE 24-25
+  <p align="center">
+    <img src="assets/images/bde/bde1.png" width="12%">
+    <img src="assets/images/bde/bde2.png" width="12%">
+    <img src="assets/images/bde/bde3.png" width="12%">
+    <img src="assets/images/bde/bde4.png" width="12%">
+    <img src="assets/images/bde/bde5.png" width="12%">
+    <img src="assets/images/bde/bde6.png" width="12%">
+    <img src="assets/images/bde/bde7.png" width="12%">
+    <img src="assets/images/bde/bde8.png" width="12%">
+  </p>
 - Pokémon
+  <p align="center">
+    <img src="assets/images/pokemon/pokemon1.png" width="12%">
+    <img src="assets/images/pokemon/pokemon2.png" width="12%">
+    <img src="assets/images/pokemon/pokemon3.png" width="12%">
+    <img src="assets/images/pokemon/pokemon4.png" width="12%">
+    <img src="assets/images/pokemon/pokemon5.png" width="12%">
+    <img src="assets/images/pokemon/pokemon6.png" width="12%">
+    <img src="assets/images/pokemon/pokemon7.png" width="12%">
+    <img src="assets/images/pokemon/pokemon8.png" width="12%">
+  </p>
 - Youtubeurs Français
+  <p align="center">
+    <img src="assets/images/youtube/youtube1.png" width="12%">
+    <img src="assets/images/youtube/youtube2.png" width="12%">
+    <img src="assets/images/youtube/youtube3.png" width="12%">
+    <img src="assets/images/youtube/youtube4.png" width="12%">
+    <img src="assets/images/youtube/youtube5.png" width="12%">
+    <img src="assets/images/youtube/youtube6.png" width="12%">
+    <img src="assets/images/youtube/youtube7.png" width="12%">
+    <img src="assets/images/youtube/youtube8.png" width="12%">
+  </p>
 - Albums Intergenerationel
-- Albums en vogue actuellement 
+  <p align="center">
+    <img src="assets/images/icon/icon1.png" width="12%">
+    <img src="assets/images/icon/icon2.png" width="12%">
+    <img src="assets/images/icon/icon3.png" width="12%">
+    <img src="assets/images/icon/icon4.png" width="12%">
+    <img src="assets/images/icon/icon5.png" width="12%">
+    <img src="assets/images/icon/icon6.png" width="12%">
+    <img src="assets/images/icon/icon7.png" width="12%">
+    <img src="assets/images/icon/icon8.png" width="12%">
+  </p>
+- Albums en vogue actuellement
+  <p align="center">
+    <img src="assets/images/top/top1.png" width="12%">
+    <img src="assets/images/top/top2.png" width="12%">
+    <img src="assets/images/top/top3.png" width="12%">
+    <img src="assets/images/top/top4.png" width="12%">
+    <img src="assets/images/top/top5.png" width="12%">
+    <img src="assets/images/top/top6.png" width="12%">
+    <img src="assets/images/top/top7.png" width="12%">
+    <img src="assets/images/top/top8.png" width="12%">
+  </p>
 - Marques connues
+  <p align="center">
+    <img src="assets/images/brands/brand1.png" width="12%">
+    <img src="assets/images/brands/brand2.png" width="12%">
+    <img src="assets/images/brands/brand3.png" width="12%">
+    <img src="assets/images/brands/brand4.png" width="12%">
+    <img src="assets/images/brands/brand5.png" width="12%">
+    <img src="assets/images/brands/brand6.png" width="12%">
+    <img src="assets/images/brands/brand7.png" width="12%">
+    <img src="assets/images/brands/brand8.png" width="12%">
+  </p>
 - Genshin Impact
+  <p align="center">
+    <img src="assets/images/genshin/genshin1.png" width="12%">
+    <img src="assets/images/genshin/genshin2.png" width="12%">
+    <img src="assets/images/genshin/genshin3.png" width="12%">
+    <img src="assets/images/genshin/genshin4.png" width="12%">
+    <img src="assets/images/genshin/genshin5.png" width="12%">
+    <img src="assets/images/genshin/genshin6.png" width="12%">
+    <img src="assets/images/genshin/genshin7.png" width="12%">
+    <img src="assets/images/genshin/genshin8.png" width="12%">
+  </p>
 - Personnes marquantes
-
+  <p align="center">
+    <img src="assets/images/knowns/known1.png" width="12%">
+    <img src="assets/images/knowns/known2.png" width="12%">
+    <img src="assets/images/knowns/known3.png" width="12%">
+    <img src="assets/images/knowns/known4.png" width="12%">
+    <img src="assets/images/knowns/known5.png" width="12%">
+    <img src="assets/images/knowns/known6.png" width="12%">
+    <img src="assets/images/knowns/known7.png" width="12%">
+    <img src="assets/images/knowns/known8.png" width="12%">
+  </p>
 
 ---
 
