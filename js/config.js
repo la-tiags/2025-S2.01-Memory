@@ -1,4 +1,4 @@
-export const MEMORY_URL = 'https://memory.iuthub.fr/api/game';
+export const MEMORY_URL = 'https://memory-api.silviorive.myds.me/api/game';
 
 
 // Ne pas utiliser
