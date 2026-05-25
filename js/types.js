@@ -26,3 +26,8 @@
  * @property {Collection} genshin
  * @property {Collection} knowns
  */
+
+/**
+ * @typedef {Object} SemanticCollections
+ * @property {Collection} semantic
+ */
