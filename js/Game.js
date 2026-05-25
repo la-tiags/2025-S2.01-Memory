@@ -17,218 +17,192 @@ const comboSounds = [
 const winSound = new Audio('assets/sounds/win.mp3');
 const loseSound = new Audio('assets/sounds/lose.mp3');
 
-/**
- * Nombre de paires selon le niveau de difficulté.
- * Extrait en constante de module pour éviter de recréer l'objet à chaque partie.
- */
 const PAIR_COUNTS = Object.freeze({
-  1: 4,   // Facile        : 4 paires  (8  cartes)
-  2: 6,   // Intermédiaire : 6 paires  (12 cartes)
-  3: 8,   // Expert        : 8 paires  (16 cartes)
+  1: 4,
+  2: 6,
+  3: 8,
 });
 
 export class Game {
-  /** @type {number} Identifiant de la partie en cours */
+  /** @type {number} */
   #id;
 
+  // ── Champs passés de #privé à _protégé ──────────────────────────
+  // Raison : SemanticGame hérite de Game et doit accéder à ces champs
+  // dans ses overrides de _checkMatch() et _createPairedImages()
+  // Convention _ = "protégé" (accessible aux sous-classes, pas au code externe)
+
   /** @type {DOMManager} */
-  #domManager = new DOMManager();
+  _domManager = new DOMManager();
 
   /** @type {Timer} */
-  #timer = new Timer((seconds) => {
-    this.#domManager.updateTimer(Timer.format(seconds));
-  }, () => this.#endGame());
+  _timer = new Timer((seconds) => {
+    this._domManager.updateTimer(Timer.format(seconds));
+  }, () => this._endGame());
 
-  /** @type {number} Nombre de paires restantes à trouver */
-  #remainingPairs = 0;
+  /** @type {number} */
+  _remainingPairs = 0;
 
   /** @type {Array<{ index: number, image: object, isFlipped: boolean, isMatched: boolean }>} */
-  #cards = [];
+  _cards = [];
 
-  /** @type {number[]} Indices des cartes actuellement retournées (max 2) */
-  #flippedCards = [];
+  /** @type {number[]} */
+  _flippedCards = [];
 
-  /** @type {boolean} Verrou pendant la vérification d'une paire */
-  #isChecking = false;
-  /** @type {number} Nombre de coups joués */
-  #moves = 0;
-  /** @type {number} Combo actuel */
-  #combo = 0;
+  /** @type {boolean} */
+  _isChecking = false;
+
+  /** @type {number} */
+  _moves = 0;
+
+  /** @type {number} */
+  _combo = 0;
 
   // ─── API publique ──────────────────────────────────────────────────────────
 
-  /**
-   * Démarre une nouvelle partie.
-   * @param {number} id - Identifiant de partie fourni par le serveur
-   */
   startGame(id) {
     this.#id = id;
 
-    const { difficulty, collectionName } = this.#domManager.getFormValues();
+    const { difficulty, collectionName } = this._domManager.getFormValues();
 
     const collection = imageCollections[collectionName];
     if (!collection) {
-      this.#domManager.showError(`Collection inconnue : "${collectionName}"`);
+      this._domManager.showError(`Collection inconnue : "${collectionName}"`);
       return;
     }
 
-    const pairedImages    = this.#createPairedImages(collection, difficulty);
-    this.#remainingPairs  = pairedImages.length / 2;
+    const pairedImages    = this._createPairedImages(collection, difficulty);
+    this._remainingPairs  = pairedImages.length / 2;
 
-    this.#buildCards(pairedImages);
-    this.#domManager.showGame();
-    this.#combo = 0;
-    this.#timer.start();
-    this.#domManager.updateMoves(this.#moves);
+    this._buildCards(pairedImages);
+    this._domManager.showGame();
+    this._combo = 0;
+    this._timer.start();
+    this._domManager.updateMoves(this._moves);
   }
 
-  /**
-   * Demande confirmation avant d'abandonner la partie.
-   */
   abandonGame() {
-    this.#domManager.showConfirmModal(
+    this._domManager.showConfirmModal(
       'Es-tu sûr de vouloir abandonner la partie ?',
-      () => this.#endGame(),
+      () => this._endGame(),
     );
   }
 
   // ─── Logique de jeu ────────────────────────────────────────────────────────
 
-  /**
-   * Gère le clic sur une carte.
-   * @param {number} cardIndex
-   */
-  #handleCardClick(cardIndex) {
-    if (this.#isChecking) return;
+  _handleCardClick(cardIndex) {
+    if (this._isChecking) return;
 
-    const card = this.#cards[cardIndex];
+    const card = this._cards[cardIndex];
     if (!card || card.isMatched || card.isFlipped) return;
 
     card.isFlipped = true;
-    this.#flippedCards.push(cardIndex);
-    this.#domManager.flipCard(cardIndex);
+    this._flippedCards.push(cardIndex);
+    this._domManager.flipCard(cardIndex);
     const flipSoundInstance = new Audio('assets/sounds/flip.mp3');
     flipSoundInstance.play().catch(() => {});
 
-    if (this.#flippedCards.length === 2) {
-      this.#moves++;
-      this.#domManager.updateMoves(this.#moves);
-      this.#isChecking = true;
-      setTimeout(() => this.#checkMatch(), 500);
+    if (this._flippedCards.length === 2) {
+      this._moves++;
+      this._domManager.updateMoves(this._moves);
+      this._isChecking = true;
+      // ── Appel via this. pour que SemanticGame puisse override ──
+      setTimeout(() => this._checkMatch(), 500);
     }
   }
 
   /**
    * Vérifie si les deux cartes retournées forment une paire.
+   * Overridé par SemanticGame pour comparer pairId au lieu de image.id
    */
-  #checkMatch() {
-    const [idx1, idx2] = this.#flippedCards;
-    const card1 = this.#cards[idx1];
-    const card2 = this.#cards[idx2];
+  _checkMatch() {
+    const [idx1, idx2] = this._flippedCards;
+    const card1 = this._cards[idx1];
+    const card2 = this._cards[idx2];
 
     if (card1.image.id === card2.image.id) {
       card1.isMatched = true;
       card2.isMatched = true;
-      this.#remainingPairs--;
-      this.#combo++;
+      this._remainingPairs--;
+      this._combo++;
 
-      this.#domManager.markMatched(idx1);
-      this.#domManager.markMatched(idx2);
+      this._domManager.markMatched(idx1);
+      this._domManager.markMatched(idx2);
 
-      if (this.#combo >= 2) {
-        this.#playComboSound(this.#combo);
-        this.#domManager.showComboBurst(this.#combo);
+      if (this._combo >= 2) {
+        this._playComboSound(this._combo);
+        this._domManager.showComboBurst(this._combo);
       } else {
         matchSound.play().catch(() => {});
       }
     } else {
       card1.isFlipped = false;
       card2.isFlipped = false;
-      this.#combo = 0;
-      this.#domManager.unflipCard(idx1);
-      this.#domManager.unflipCard(idx2);
+      this._combo = 0;
+      this._domManager.unflipCard(idx1);
+      this._domManager.unflipCard(idx2);
       wrongSound.play().catch(() => {});
     }
 
-    if (this.#remainingPairs === 0) {
-      setTimeout(() => this.#endGame(), 500);
+    if (this._remainingPairs === 0) {
+      setTimeout(() => this._endGame(), 500);
     }
 
-    this.#flippedCards = [];
-    this.#isChecking   = false;
+    this._flippedCards = [];
+    this._isChecking   = false;
   }
 
-  /**
-   * Termine la partie (victoire ou abandon) et envoie le résultat au serveur.
-   */
-  async #endGame() {
-    const seconds = this.#timer.seconds;
-    const moves   = this.#moves;
-    const won     = this.#remainingPairs === 0;
-    this.#timer.stop();
+  async _endGame() {
+    const seconds = this._timer.seconds;
+    const moves   = this._moves;
+    const won     = this._remainingPairs === 0;
+    this._timer.stop();
 
-      if (won) {
-        winSound.play();
-      } 
-      else {
-        loseSound.play();
-      }
+    if (won) winSound.play();
+    else     loseSound.play();
 
     try {
-      await ApiService.updateGameResult(this.#id, this.#remainingPairs);
+      await ApiService.updateGameResult(this.#id, this._remainingPairs);
     } catch (error) {
       console.error('Erreur fin de partie :', error);
     }
 
-    this.#domManager.showEndScreen(won, moves, seconds, () => {
-      this.#resetState();
-      this.#domManager.showSetup();
+    this._domManager.showEndScreen(won, moves, seconds, () => {
+      this._resetState();
+      this._domManager.showSetup();
     });
   }
 
-
-
   // ─── Construction du plateau ───────────────────────────────────────────────
 
-  /**
-   * Crée, mélange et affiche les cartes.
-   * @param {object[]} pairedImages
-   */
-  #buildCards(pairedImages) {
-    this.#cards = pairedImages.map((image, index) => ({
+  _buildCards(pairedImages) {
+    this._cards = pairedImages.map((image, index) => ({
       index,
       image,
       isFlipped:  false,
       isMatched:  false,
     }));
 
-    this.#shuffleArray(this.#cards);
+    this._shuffleArray(this._cards);
+    this._cards.forEach((card, i) => { card.index = i; });
+    this._flippedCards = [];
 
-    // Réassigner les index APRÈS le mélange pour que data-index
-    // corresponde à la position réelle dans this.#cards
-    this.#cards.forEach((card, i) => { card.index = i; });
-
-    this.#flippedCards = [];
-
-    this.#domManager.createCards(
-      this.#cards,
-      (cardIndex) => this.#handleCardClick(cardIndex),
+    this._domManager.createCards(
+      this._cards,
+      (cardIndex) => this._handleCardClick(cardIndex),
     );
   }
 
   /**
    * Sélectionne les images et les double pour créer les paires.
-   * @param {object[]} collection
-   * @param {number}   difficulty
-   * @returns {object[]}
-   * @throws {Error} si la difficulté est invalide
+   * Overridé par SemanticGame pour retourner des paires d'images différentes.
    */
-  #createPairedImages(collection, difficulty) {
+  _createPairedImages(collection, difficulty) {
     if (!(difficulty in PAIR_COUNTS)) {
-      throw new Error(`Difficulté invalide : ${difficulty}. Valeurs attendues : ${Object.keys(PAIR_COUNTS).join(', ')}`);
+      throw new Error(`Difficulté invalide : ${difficulty}.`);
     }
 
-    const numPairs      = PAIR_COUNTS[difficulty];
+    const numPairs       = PAIR_COUNTS[difficulty];
     const selectedImages = collection.slice(0, numPairs);
 
     if (selectedImages.length < numPairs) {
@@ -238,37 +212,26 @@ export class Game {
     return selectedImages.flatMap(image => [image, image]);
   }
 
-  /**
-   * Mélange un tableau en place (Fisher-Yates).
-   * @param {Array} array
-   */
-  #shuffleArray(array) {
+  _shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
   }
 
-  /**
-   * Joue le bon son combo pour le combo actuel.
-   * @param {number} combo
-   */
-  #playComboSound(combo) {
+  _playComboSound(combo) {
     const index = Math.min(combo - 2, comboSounds.length - 1);
     const sound = comboSounds[index];
     sound.currentTime = 0;
     sound.play().catch(() => {});
   }
 
-  /**
-   * Réinitialise l'état interne du jeu (sans toucher au DOM).
-   */
-  #resetState() {
-    this.#cards          = [];
-    this.#flippedCards   = [];
-    this.#moves = 0;
-    this.#combo = 0;
-    this.#remainingPairs = 0;
-    this.#timer.reset();
+  _resetState() {
+    this._cards          = [];
+    this._flippedCards   = [];
+    this._moves          = 0;
+    this._combo          = 0;
+    this._remainingPairs = 0;
+    this._timer.reset();
   }
 }

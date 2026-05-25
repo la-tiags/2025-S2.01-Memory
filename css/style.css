@@ -188,6 +188,7 @@ header h1 {
 .celestial {
   background: linear-gradient(90deg, #bd94ff, #89cfff, #efa0f8);
   background-size: 200% auto;
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: shine 3s linear infinite;
@@ -580,4 +581,78 @@ header h1 {
 
 .lose-flash {
   animation: loseFlash 0.5s ease 3;
+}
+
+/* =============================================================
+   SEMANTIC FEATURE — à coller à la fin de css/style.css
+   Deux petits ajouts uniquement :
+     1. Le bloc "Mode Sémantique" en bas du formulaire d'accueil
+     2. Le lien "← Retour" en haut du formulaire semantic.html
+   ============================================================= */
+ 
+ 
+/* ── 1. Bloc d'invitation au mode sémantique (index.html) ─────
+   Placé après le texte des règles, dans .rules-container.
+   Séparé par une ligne fine comme le reste du bloc rules.
+   ─────────────────────────────────────────────────────────── */
+.semantic-link-container {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+ 
+.semantic-link-label {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.85rem;
+  margin: 0;
+}
+ 
+/* Bouton lien — même style que .game-form button[type="submit"] */
+.semantic-link-btn {
+  display: inline-block;
+  background: white;
+  color: #a2d2ff;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 30px;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+ 
+.semantic-link-btn:hover {
+  transform: scale(1.1) translateY(-5px);
+  box-shadow: 0 10px 20px rgba(255, 255, 255, 0.4);
+  background: #a2d2ff;
+  color: white;
+}
+ 
+ 
+/* ── 2. Lien retour (semantic.html) ───────────────────────────
+   En haut du .setup-form, avant le h2.
+   Discret, même fonte, couleur bleue du site.
+   ─────────────────────────────────────────────────────────── */
+.back-link {
+  display: inline-block;
+  color: white;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  margin-bottom: 16px;
+  opacity: 0.85;
+  transition: opacity 0.2s, transform 0.2s;
+}
+ 
+.back-link:hover {
+  opacity: 1;
+  transform: translateX(-3px);
 }

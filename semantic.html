@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Sémantique</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- semantic-app.js au lieu de app.js : même structure, utilise SemanticGame -->
+  <script src="js/semantic-app.js" type="module"></script>
+</head>
+<body>
+<header><h1><strong>Memory Sémantique</strong></h1></header>
+
+<div class="setup-form">
+
+  <!-- Lien retour vers la page principale — même style que les autres liens du site -->
+  <a href="index.html" class="back-link">← Retour au Memory classique</a>
+
+  <h2>Démarrer une partie sémantique</h2>
+
+  <form class="game-form">
+    <div>
+      <label for="pseudo">Nom de l'utilisateur</label>
+      <input type="text" id="pseudo" name="pseudo" required placeholder="Ton pseudo...">
+    </div>
+
+    <div>
+      <label for="difficulty">Difficulté</label>
+      <select id="difficulty" name="difficulty">
+        <option value="1">Facile</option>
+        <option value="2">Intermédiaire</option>
+        <option value="3">Expert</option>
+      </select>
+    </div>
+
+    <!-- Pas de select collection : une seule collection sémantique -->
+    <!-- DOMManager.getFormValues() a besoin d'un #collection dans le DOM -->
+    <input type="hidden" id="collection" value="semantic">
+
+    <button type="submit">Lancer la magie !</button>
+  </form>
+
+  <div class="rules-container">
+    <h3>Le Mode Sémantique 🧠</h3>
+    <p>
+      Ici, pas de paires <span class="magic-word">identiques</span> !
+      Les cartes se cachent par <span class="magic-word">sens</span> : deux images
+      <span class="glow-text">liées sémantiquement</span> forment une paire. 🌈
+      <br><br>
+      <strong>Ta mission :</strong> retrouve les duos qui vont naturellement ensemble —
+      un <span class="celestial">lien logique</span>, une association d'idées,
+      une évidence que ton cerveau reconnaîtra... ou pas !
+      <br><br>
+      Choisis ta collection, fais confiance à ton instinct et fais vite —
+      Le <span class="chrono">chrono tourne</span> et les nuages s'envolent !☁️
+    </p>
+    <div class="rules-footer">À toi de jouer, <span class="sunlight">petit génie</span> ! 🌟</div>
+  </div>
+
+</div>
+
+<!-- Zone de jeu — identique à index.html, gérée par SemanticGame via DOMManager -->
+<div class="game-container" style="display: none;">
+  <div class="game-controls">
+    <div class="timer">00:00</div>
+    <div class="moves-counter">0 coup(s)</div>
+    <button class="abandon-btn" id="abandon-btn">Abandonner</button>
+  </div>
+  <div class="game-board"></div>
+</div>
+
+<!-- Modale de confirmation abandon — identique -->
+<div id="confirm-modal">
+  <div class="modal-box">
+    <p class="modal-message"></p>
+    <div class="modal-actions">
+      <button class="modal-confirm">Oui, abandonner</button>
+      <button class="modal-cancel">Continuer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Écran de fin — identique -->
+<div id="end-screen">
+  <div class="end-box">
+    <div class="end-emoji" id="end-emoji"></div>
+    <h2 id="end-title"></h2>
+    <p id="end-message"></p>
+    <button id="replay-btn">Rejouer</button>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,28 +1,60 @@
-import {DOMManager} from './DOMManager.js';
-import {Game} from './Game.js';
-import {ApiService} from './ApiService.js';
+/**
+ * Point d'entrée de l'application Memory.
+ *
+ * MODIFICATIONS pour le mode sémantique (marquées ── SEMANTIC ──) :
+ *   1. Import de SemanticGame
+ *   2. Instanciation de semanticGame
+ *   3. Exposition de 3 fonctions sur window (openSemanticPanel, closeSemanticPanel, startSemanticGame)
+ *      → nécessaire car les onclick="..." du HTML ne peuvent pas accéder aux modules ES directement
+ *
+ * Tout le reste est inchangé.
+ */
 
-const domManager = new DOMManager();
+import { Game }         from './Game.js';
+import { ApiService }   from './ApiService.js';
+import { SemanticGame } from './SemanticGame.js'; // ── SEMANTIC ── import
+
+// ── Jeu principal (inchangé) ───────────────────────────────────────────────
 const game = new Game();
 
-// Bouton d'abandon de partie
-document.querySelector('#abandon-btn').addEventListener('click', () => {
+document.querySelector('.game-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const pseudo     = document.getElementById('pseudo').value.trim();
+  const difficulty = parseInt(document.getElementById('difficulty').value, 10);
+
+  if (!pseudo) return;
+
+  try {
+    const { id } = await ApiService.createGame(pseudo, difficulty);
+    game.startGame(id);
+  } catch (error) {
+    console.error('Erreur lors du démarrage de la partie :', error);
+  }
+});
+
+document.getElementById('abandon-btn').addEventListener('click', () => {
   game.abandonGame();
 });
 
-document.querySelector('.game-form').addEventListener('submit', async function (event) {
-  event.preventDefault();
-  // Récupération des valeurs du formulaire
-  const pseudo = document.querySelector('#pseudo').value;
-  const difficulty = document.querySelector('#difficulty').value;
+// ── SEMANTIC : instanciation ───────────────────────────────────────────────
+const semanticGame = new SemanticGame();
 
-  try {
-    // On passe ici le pseudo et la difficulté récupérés dans le formulaire
-    const data = await ApiService.createGame(pseudo, difficulty);
-    console.log('Success:', data, data.id);
-    game.startGame(data.id);
-  } catch (error) {
-    console.error('Error:', error);
-    alert(error.message || 'Erreur lors de la création de la partie');
-  }
-});
+// ── SEMANTIC : fonctions exposées au HTML ──────────────────────────────────
+// Les onclick="..." dans index.html ne peuvent pas accéder aux modules ES.
+// On expose donc ces trois fonctions sur window comme pont HTML ↔ module.
+
+/** Ouvre le panel latéral sémantique. */
+window.openSemanticPanel = () => {
+  document.getElementById('semantic-panel').classList.add('open');
+};
+
+/** Ferme le panel latéral sémantique. */
+window.closeSemanticPanel = () => {
+  document.getElementById('semantic-panel').classList.remove('open');
+};
+
+/** Lance une partie sémantique (appelé par le bouton "Lancer" du panel). */
+window.startSemanticGame = () => {
+  semanticGame.start();
+};
