@@ -66,7 +66,7 @@ Le plus challengeant pour tout le monde a été **`DOMManager.js`** et **`Game.j
 - Sons au retournement de carte et à la découverte d'une paire
 - Collections d'images supplémentaires
 - Système de combos (enchaînement de paires : multiplicateur x2, x3… avec son progressif)
-- Mode "Memory Inversé" : associer des paires liées par une logique (clé/serrure, soleil/lune…) plutôt que des images identiques
+- Mode "Memory Sémantique" : associer des paires liées par une logique (clé/serrure, soleil/lune…) plutôt que des images identiques
 
 ---
 
@@ -263,6 +263,6 @@ Le plus challengeant pour tout le monde a été **`DOMManager.js`** et **`Game.j
 | Écran de fin | Terminé  |
 | Animations victoire / défaite | Terminé  |
 | Sons | Terminé  |
-| Collections d'images supplémentaires | En cours |
+| Collections d'images supplémentaires | Terminé |
 | Système de combos | Terminé  |
-| Mode Memory Inversé | En cours |
+| Mode Memory Sémantique | API non fonctionnel |
