@@ -204,7 +204,7 @@ export class DOMManager {
       if (el) el.textContent = `${count} coup${count > 1 ? 's' : ''}`;
     }
 //feature: endgame screen
-    showEndScreen(won, moves, seconds, onReplay)
+    showEndScreen(won, moves, remainingPairs, seconds, onReplay)
     {
       const screen = document.querySelector(DOMManager.SELECTORS.END_SCREEN);
       const emoji = document.querySelector(DOMManager.SELECTORS.END_EMOJI);
@@ -221,7 +221,7 @@ export class DOMManager {
       } else {
         emoji.textContent = '😔';
         title.textContent = 'Partie terminée';
-        message.textContent = `Tu avais encore ${moves} paire${moves > 1 ? 's' : ''} à trouver. Retente ta chance !`;
+        message.textContent = `Tu avais encore ${remainingPairs} paire${remainingPairs > 1 ? 's' : ''} à trouver. Retente ta chance !`;
         document.body.classList.add('lose-flash');
         setTimeout(() => document.body.classList.remove('lose-flash'), 1500);
       }

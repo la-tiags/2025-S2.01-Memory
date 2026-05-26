@@ -24,13 +24,13 @@ const PAIR_COUNTS = Object.freeze({
 });
 
 export class Game {
-  /** @type {number} */
-  #id;
-
   // ── Champs passés de #privé à _protégé ──────────────────────────
   // Raison : SemanticGame hérite de Game et doit accéder à ces champs
   // dans ses overrides de _checkMatch() et _createPairedImages()
   // Convention _ = "protégé" (accessible aux sous-classes, pas au code externe)
+
+  /** @type {number} */
+  _gameId = null;
 
   /** @type {DOMManager} */
   _domManager = new DOMManager();
@@ -61,7 +61,7 @@ export class Game {
   // ─── API publique ──────────────────────────────────────────────────────────
 
   startGame(id) {
-    this.#id = id;
+    this._gameId = id;
 
     const { difficulty, collectionName } = this._domManager.getFormValues();
 
@@ -162,12 +162,12 @@ export class Game {
     else     loseSound.play();
 
     try {
-      await ApiService.updateGameResult(this.#id, this._remainingPairs);
+      await ApiService.updateGameResult(this._gameId, this._remainingPairs);
     } catch (error) {
       console.error('Erreur fin de partie :', error);
     }
 
-    this._domManager.showEndScreen(won, moves, seconds, () => {
+    this._domManager.showEndScreen(won, moves, this._remainingPairs, seconds, () => {
       this._resetState();
       this._domManager.showSetup();
     });
