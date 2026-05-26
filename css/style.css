@@ -148,7 +148,7 @@ header h1 {
 /*reponsive*/
 .rules-container {
   margin-top: 25px;
-  color: rgb(100, 132, 236);
+  color: #023e8a;
   font-size: 0.85rem;
   text-align: center;
   border-top: 1px solid rgba(255, 255, 255, 0.3);
@@ -607,6 +607,7 @@ header h1 {
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  
 }
  
 .semantic-link-label {
