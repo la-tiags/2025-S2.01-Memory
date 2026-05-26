@@ -147,7 +147,7 @@ header h1 {
 /*reponsive*/
 .rules-container {
   margin-top: 25px;
-  color: white;
+  color: rgb(100, 132, 236);
   font-size: 0.85rem;
   text-align: center;
   border-top: 1px solid rgba(255, 255, 255, 0.3);
@@ -179,7 +179,7 @@ header h1 {
 
 /* retouche regle du jeu = variante*/
 .glow-text {
-  color: #ffffff;
+  color: rgb(100, 132, 236);;
   text-shadow: 0 0 8px rgba(255, 255, 255, 0.8), 0 0 15px var(--color-accent);
   font-weight: 700;
 }
@@ -606,7 +606,7 @@ header h1 {
 }
  
 .semantic-link-label {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgb(100, 132, 236);
   font-size: 0.85rem;
   margin: 0;
 }
@@ -643,7 +643,7 @@ header h1 {
    ─────────────────────────────────────────────────────────── */
 .back-link {
   display: inline-block;
-  color: white;
+  color: rgb(100, 132, 236);
   font-size: 0.82rem;
   font-weight: 600;
   text-decoration: none;
